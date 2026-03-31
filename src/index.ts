@@ -7,6 +7,7 @@ import authRoutes from './routes/auth';
 import strokeRiskRoutes from './routes/strokeRisk';
 import userRoutes from './routes/users';
 import doctorRoutes from './routes/doctors';
+import appointmentRoutes from './routes/appointments';
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/stroke-risk', strokeRiskRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/doctors', doctorRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
