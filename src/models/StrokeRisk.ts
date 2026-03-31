@@ -83,12 +83,8 @@ const strokeRiskSchema = new Schema<IStrokeRisk>({
     required: true,
     enum: ['low', 'medium', 'high']
   },
-  criticalFactors: [{
-    type: String
-  }],
-  recommendations: [{
-    type: String
-  }],
+  criticalFactors: [String],
+  recommendations: [String],
   assessmentDate: {
     type: Date,
     default: Date.now
