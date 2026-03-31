@@ -53,7 +53,7 @@ const userSchema = new Schema<IUser>({
   },
   dateOfBirth: {
     type: String,
-    required: true
+    required: false
   },
   userType: {
     type: String,
@@ -74,9 +74,7 @@ const userSchema = new Schema<IUser>({
   },
   experience: {
     type: Number,
-    required: function(this: IUser) {
-      return this.userType === 'doctor';
-    }
+    required: false
   },
   education: [{
     type: String
@@ -86,9 +84,7 @@ const userSchema = new Schema<IUser>({
   }],
   consultationFee: {
     type: Number,
-    required: function(this: IUser) {
-      return this.userType === 'doctor';
-    }
+    required: false
   },
   rating: {
     type: Number,
