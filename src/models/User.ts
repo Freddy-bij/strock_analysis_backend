@@ -7,6 +7,7 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
+  phone?: string;
   dateOfBirth: string;
   userType: 'patient' | 'doctor';
   specialization?: string;
@@ -44,6 +45,11 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: true,
     minlength: 6
+  },
+  phone: {
+    type: String,
+    required: false,
+    trim: true
   },
   dateOfBirth: {
     type: String,

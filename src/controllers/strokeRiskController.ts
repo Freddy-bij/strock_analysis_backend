@@ -83,26 +83,43 @@ export const calculateStrokeRisk = async (req: any, res: Response) => {
       riskScore += 1;
     }
 
-    // Diabetes scoring
-    if (diabetesStatus === 'yes') {
+    // Diabetes scoring - map frontend values to backend
+    let diabetesStatusMapped: string;
+    if (diabetesStatus === 'no') {
+      diabetesStatusMapped = 'no';
+    } else if (diabetesStatus === 'prediabetes' || diabetesStatus === 'type1' || diabetesStatus === 'type2') {
+      diabetesStatusMapped = 'yes';
       riskScore += 2;
       criticalFactors.push('Diabetes');
       recommendations.push('Diabetes management optimization');
+    } else {
+      diabetesStatusMapped = 'yes'; // Default to yes for safety
     }
 
-    // Physical activity scoring
-    if (physicalActivity === 'low') {
+    // Physical activity scoring - map frontend values to backend
+    let physicalActivityLevel: string;
+    if (physicalActivity === 'sedentary') {
+      physicalActivityLevel = 'low';
       riskScore += 2;
       criticalFactors.push('Low Physical Activity');
       recommendations.push('Increase physical activity to 150 min/week');
-    } else if (physicalActivity === 'moderate') {
+    } else if (physicalActivity === 'light' || physicalActivity === 'moderate') {
+      physicalActivityLevel = 'moderate';
       riskScore += 1;
+    } else if (physicalActivity === 'active') {
+      physicalActivityLevel = 'high';
+    } else {
+      physicalActivityLevel = physicalActivity;
     }
 
-    // Family history scoring
-    if (familyHistory === 'yes') {
+    // Family history scoring - map frontend values to backend
+    let familyHistoryMapped: string;
+    if (familyHistory === 'yes' || familyHistory === 'extended') {
+      familyHistoryMapped = 'yes';
       riskScore += 2;
       criticalFactors.push('Family History of Stroke');
+    } else {
+      familyHistoryMapped = 'no';
     }
 
     // Determine risk level
@@ -131,9 +148,9 @@ export const calculateStrokeRisk = async (req: any, res: Response) => {
       diastolicBP,
       bmi,
       smokingStatus,
-      diabetesStatus,
-      physicalActivity,
-      familyHistory,
+      diabetesStatus: diabetesStatusMapped,
+      physicalActivity: physicalActivityLevel,
+      familyHistory: familyHistoryMapped,
       riskScore,
       riskLevel,
       criticalFactors,
