@@ -81,7 +81,7 @@ export const getDoctorAppointments = async (req: any, res: Response) => {
 // Create a new appointment
 export const createAppointment = async (req: any, res: Response) => {
   try {
-    const { doctorId, date, time, duration = 30, type = 'consultation', notes } = req.body;
+    const { doctorId, date, time, duration = 30, type = 'consultation', notes, reason } = req.body;
     const patientId = req.userId;
 
     // Validate doctor exists
@@ -107,7 +107,8 @@ export const createAppointment = async (req: any, res: Response) => {
       date: new Date(date),
       time,
       duration,
-      type,
+      type: type === 'in-person' ? 'in-person' : 'video',
+      reason,
       notes
     });
 

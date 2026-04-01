@@ -8,7 +8,8 @@ export interface IAppointment extends Document {
   time: string;
   duration: number; // in minutes
   status: 'scheduled' | 'completed' | 'cancelled' | 'no-show';
-  type: 'consultation' | 'follow-up' | 'emergency' | 'stroke-risk-assessment';
+  type: 'consultation' | 'follow-up' | 'emergency' | 'stroke-risk-assessment' | 'in-person' | 'video';
+  reason: string;
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -56,8 +57,13 @@ const appointmentSchema = new Schema<IAppointment>({
   type: {
     type: String,
     required: true,
-    enum: ['consultation', 'follow-up', 'emergency', 'stroke-risk-assessment'],
+    enum: ['consultation', 'follow-up', 'emergency', 'stroke-risk-assessment', 'in-person', 'video'],
     default: 'consultation'
+  },
+  reason: {
+    type: String,
+    required: true,
+    maxlength: 500
   },
   notes: {
     type: String,
