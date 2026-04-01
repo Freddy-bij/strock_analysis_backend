@@ -9,6 +9,9 @@ export interface IUser extends Document {
   password: string;
   phone?: string;
   dateOfBirth: string;
+  address?: string;
+  emergencyContact?: string;
+  emergencyPhone?: string;
   userType: 'patient' | 'doctor';
   specialization?: string;
   licenseNumber?: string;
@@ -54,6 +57,21 @@ const userSchema = new Schema<IUser>({
   dateOfBirth: {
     type: String,
     required: false
+  },
+  address: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  emergencyContact: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  emergencyPhone: {
+    type: String,
+    required: false,
+    trim: true
   },
   userType: {
     type: String,

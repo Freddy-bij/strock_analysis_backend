@@ -41,7 +41,7 @@ export const getUserProfile = async (req: any, res: Response) => {
 // Update user profile
 export const updateUserProfile = async (req: any, res: Response) => {
   try {
-    const allowedUpdates = ['firstName', 'lastName', 'dateOfBirth'];
+    const allowedUpdates = ['firstName', 'lastName', 'dateOfBirth', 'phone', 'address', 'emergencyContact', 'emergencyPhone'];
     const updates: any = {};
     
     allowedUpdates.forEach(field => {

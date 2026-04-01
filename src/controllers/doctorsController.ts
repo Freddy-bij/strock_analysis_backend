@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express';
 import User, { IUser } from '../models/User';
 import StrokeRisk from '../models/StrokeRisk';
+import Prescription from '../models/Prescription';
 import jwt from 'jsonwebtoken';
 
 // Middleware to verify JWT token
@@ -132,5 +133,79 @@ export const getDoctorProfile = async (req: any, res: Response) => {
   } catch (error: any) {
     console.error('Get doctor profile error:', error);
     res.status(500).json({ error: 'Failed to get doctor profile', details: error.message });
+  }
+};
+
+// Create a new prescription
+export const createPrescription = async (req: any, res: Response) => {
+  try {
+    // Verify user is a doctor
+    const doctor = await User.findById(req.userId);
+    if (!doctor || doctor.userType !== 'doctor') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { patientId, medications, notes } = req.body;
+
+    // Validate required fields
+    if (!patientId || !medications || medications.length === 0) {
+      return res.status(400).json({ error: 'Patient ID and at least one medication are required' });
+    }
+
+    // Validate patient exists
+    const patient = await User.findById(patientId);
+    if (!patient || patient.userType !== 'patient') {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    // Create prescription
+    const prescription = new Prescription({
+      patientId,
+      doctorId: req.userId,
+      medications,
+      notes,
+      prescribedAt: new Date(),
+      status: 'active'
+    });
+
+    await prescription.save();
+
+    // Populate patient and doctor info for response
+    const populatedPrescription = await Prescription.findById(prescription._id)
+      .populate('patientId', 'firstName lastName email')
+      .populate('doctorId', 'firstName lastName specialization');
+
+    res.status(201).json({
+      success: true,
+      data: populatedPrescription,
+      message: 'Prescription created successfully'
+    });
+  } catch (error: any) {
+    console.error('Create prescription error:', error);
+    res.status(500).json({ error: 'Failed to create prescription', details: error.message });
+  }
+};
+
+// Get doctor's prescriptions
+export const getDoctorPrescriptions = async (req: any, res: Response) => {
+  try {
+    // Verify user is a doctor
+    const doctor = await User.findById(req.userId);
+    if (!doctor || doctor.userType !== 'doctor') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const prescriptions = await Prescription.find({ doctorId: req.userId })
+      .populate('patientId', 'firstName lastName email')
+      .populate('doctorId', 'firstName lastName specialization')
+      .sort({ prescribedAt: -1 });
+
+    res.json({
+      success: true,
+      data: prescriptions
+    });
+  } catch (error: any) {
+    console.error('Get prescriptions error:', error);
+    res.status(500).json({ error: 'Failed to get prescriptions', details: error.message });
   }
 };

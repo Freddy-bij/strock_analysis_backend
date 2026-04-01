@@ -3,7 +3,9 @@ import {
   authenticateToken, 
   getAllDoctors, 
   getDoctorPatients, 
-  getDoctorProfile 
+  getDoctorProfile,
+  createPrescription,
+  getDoctorPrescriptions
 } from '../controllers/doctorsController';
 
 const router = express.Router();
@@ -16,5 +18,11 @@ router.get('/patients', authenticateToken, getDoctorPatients);
 
 // Get doctor profile
 router.get('/profile', authenticateToken, getDoctorProfile);
+
+// Create prescription
+router.post('/prescriptions', authenticateToken, createPrescription);
+
+// Get doctor's prescriptions
+router.get('/prescriptions', authenticateToken, getDoctorPrescriptions);
 
 export default router;

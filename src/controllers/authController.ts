@@ -150,3 +150,28 @@ export const getAuthProfile = async (req: any, res: Response) => {
     res.status(500).json({ error: 'Failed to get profile', details: error.message });
   }
 };
+
+// Logout user
+export const logoutUser = async (req: any, res: Response) => {
+  try {
+    // In a stateless JWT setup, logout is typically handled client-side
+    // But we can add server-side logging or token blacklisting if needed
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (token) {
+      console.log(`User logout request for token: ${token.substring(0, 20)}...`);
+      // In a production app, you might want to:
+      // 1. Add the token to a blacklist in Redis/database
+      // 2. Log the logout activity for security auditing
+      // 3. Clear any server-side sessions
+    }
+
+    res.json({
+      success: true,
+      message: 'Logout successful'
+    });
+  } catch (error: any) {
+    console.error('Logout error:', error);
+    res.status(500).json({ error: 'Logout failed', details: error.message });
+  }
+};

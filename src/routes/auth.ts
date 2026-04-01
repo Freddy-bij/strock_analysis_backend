@@ -2,7 +2,8 @@ import express from 'express';
 import { 
   registerUser, 
   loginUser, 
-  getAuthProfile 
+  getAuthProfile,
+  logoutUser 
 } from '../controllers/authController';
 
 const router = express.Router();
@@ -297,5 +298,43 @@ router.post('/login', loginUser);
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.get('/profile', getAuthProfile);
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     description: Logout the authenticated user and clear session
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Logout successful"
+ *       401:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.post('/logout', logoutUser);
 
 export default router;
