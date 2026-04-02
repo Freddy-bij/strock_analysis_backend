@@ -6,7 +6,8 @@ import {
   createAppointment,
   updateAppointmentStatus,
   cancelAppointment,
-  getAvailableSlots
+  getAvailableSlots,
+  processAppointmentPayment
 } from '../controllers/appointmentsController';
 
 const router = express.Router();
@@ -24,6 +25,7 @@ router.get('/doctor', getDoctorAppointments);
 router.post('/', createAppointment);
 router.get('/available-slots', getAvailableSlots);
 router.put('/:id/status', updateAppointmentStatus);
+router.post('/:id/payment', processAppointmentPayment);
 router.delete('/:id', cancelAppointment);
 
 export default router;

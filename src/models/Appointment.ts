@@ -7,10 +7,16 @@ export interface IAppointment extends Document {
   date: Date;
   time: string;
   duration: number; // in minutes
-  status: 'scheduled' | 'completed' | 'cancelled' | 'no-show';
+  status: 'pending' | 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no-show';
   type: 'consultation' | 'follow-up' | 'emergency' | 'stroke-risk-assessment' | 'in-person' | 'video';
   reason: string;
   notes?: string;
+  appointmentFee?: number;
+  assessmentFee?: number;
+  totalFee?: number;
+  appointmentFeePaid: boolean;
+  assessmentFeePaid: boolean;
+  paymentStatus: 'pending' | 'partial' | 'paid' | 'refunded';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,8 +57,8 @@ const appointmentSchema = new Schema<IAppointment>({
   status: {
     type: String,
     required: true,
-    enum: ['scheduled', 'completed', 'cancelled', 'no-show'],
-    default: 'scheduled'
+    enum: ['pending', 'scheduled', 'confirmed', 'completed', 'cancelled', 'no-show'],
+    default: 'pending'
   },
   type: {
     type: String,
@@ -68,6 +74,31 @@ const appointmentSchema = new Schema<IAppointment>({
   notes: {
     type: String,
     maxlength: 500
+  },
+  appointmentFee: {
+    type: Number,
+    required: false
+  },
+  assessmentFee: {
+    type: Number,
+    required: false
+  },
+  totalFee: {
+    type: Number,
+    required: false
+  },
+  appointmentFeePaid: {
+    type: Boolean,
+    default: false
+  },
+  assessmentFeePaid: {
+    type: Boolean,
+    default: false
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'partial', 'paid', 'refunded'],
+    default: 'pending'
   }
 }, {
   timestamps: true
